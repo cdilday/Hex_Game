@@ -65,6 +65,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Hex_Graph.cpp" />
+    <ClCompile Include="..\node.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\node.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
