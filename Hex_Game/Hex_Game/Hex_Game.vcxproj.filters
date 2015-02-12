@@ -21,9 +21,15 @@
     <ClCompile Include="..\node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\graph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\node.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\graph.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

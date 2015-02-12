@@ -64,10 +64,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\graph.cpp" />
     <ClCompile Include="..\Hex_Graph.cpp" />
     <ClCompile Include="..\node.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\graph.h" />
     <ClInclude Include="..\node.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

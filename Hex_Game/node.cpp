@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "node.h";
+#include "node.h"
 
 /*class node{
 public:
