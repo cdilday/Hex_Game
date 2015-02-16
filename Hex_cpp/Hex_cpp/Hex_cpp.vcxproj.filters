@@ -7,7 +7,7 @@
     </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
@@ -18,18 +18,18 @@
     <ClCompile Include="..\Hex_Graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\node.cpp">
+    <ClCompile Include="..\graph.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\graph.cpp">
+    <ClCompile Include="..\node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\node.h">
+    <ClInclude Include="..\graph.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\graph.h">
+    <ClInclude Include="..\node.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
