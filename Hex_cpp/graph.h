@@ -24,3 +24,10 @@ private:
 	int size;
 	int elements;
 };//end graph class
+
+class location{
+public:
+	location(int, int);
+	int row;
+	int col;
+};//end location class

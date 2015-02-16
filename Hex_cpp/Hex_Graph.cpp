@@ -15,13 +15,15 @@ inline double probability(){ return 1.0*rand() / RAND_MAX; }// probability funct
 //runs each next possible move in the graph and then randomly populates it, then checks to see who won.
 //Repeats 100 times and keeps track of which node won the most, then gives that node's row and column 
 //value back to the playAIGame function to make that move
-void monteCarloAI(graph realBoard, char player, int& row, int& column)
+bool monteCarloAI(graph realBoard, char player, int& row, int& column)
 {
 	graph board = realBoard;
 	graph tempBoard = board;
 	bool checkUsed = false;
 	bool bypass = false;
+	bool noWins = true;
 	int favor = 0, tempWins = 0, tempFavor = 0;
+	//loops to traverse every piece on the board
 	for (int r = 0; r < 11; r++)
 	{
 		for (int c = 0; c < 11; c++)
@@ -29,6 +31,7 @@ void monteCarloAI(graph realBoard, char player, int& row, int& column)
 			if (!bypass && !board.checkBlocked(board.hexBoard[r][c], player) && board.hexBoard[r][c].getEntry() == '-')
 			{
 				tempBoard = board;
+				//loop that simulates the board moves
 				for (int i = 0; i < 1000; i++)
 				{
 					tempBoard.aiSetMove(player, r, c);
@@ -38,12 +41,12 @@ void monteCarloAI(graph realBoard, char player, int& row, int& column)
 						tempWins++;
 						if (checkUsed)
 							tempFavor++;
+						noWins = false;
 					}//keeps track of wins, and if it was used in the win add to its favor
 					tempBoard = board;
 					checkUsed = false;
 				}// keeps track of how many times it wins with that move
 				tempFavor += tempWins;
-				tempFavor += (3 * tempBoard.countSimilarNeighbors(tempBoard.hexBoard[r][c], player));
 				if (tempWins == 1000)
 				{
 					bypass = true;
@@ -56,14 +59,18 @@ void monteCarloAI(graph realBoard, char player, int& row, int& column)
 					column = c;
 					favor = tempFavor;
 				}// replaces the coordinates if the move won more often
-				cout << "Favor for " << r << " " << c << ": " << tempFavor << endl;
+				cout << "Wins for " << r << " " << c << ": " << tempFavor << endl;
 				tempWins = 0; tempFavor = 0;
 				board.hexBoard[r][c].setEntry('-');
 			}//end if the chosen 
 		}//end column traversing
 	}//end row traversing 
+
+	//no Wins means that the AI simulated all moves and couldn't see any possible way to win
+	return noWins;
 }//end monteCarloAI
-//plays the game between 2 players
+
+//plays the game between 2 Human Players
 void playGame(graph board){
 	cout << "Starting a game of Hex" << endl;
 	cout << board;
@@ -110,7 +117,15 @@ void playAIGame(graph board){
 				break;
 			}
 		}
-		monteCarloAI(board, aIplayer, r, c);
+
+		bool noChance = monteCarloAI(board, aIplayer, r, c);
+		
+		if (noChance)
+		{
+			cout << aIplayer << " player gives up, as they see no good moves left!"<< endl;
+			break;
+		}
+
 		if (aIplayer == 'W')
 		{
 			board.aiSetMove(aIplayer, r, c);
@@ -195,6 +210,6 @@ int main(int argc, char** argv)
 	srand(time(0));
 	graph test;
 	playAIGame(test);
-	system("PAUSE"); //<- this is for Visual Studio, ignore it
+	system("PAUSE");
 	return 0;
 }//end main function

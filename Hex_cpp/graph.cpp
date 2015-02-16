@@ -2,6 +2,7 @@
 #include <vector>
 #include "graph.h"
 
+//graph constructor, creates and loads the graph
 graph::graph(){
 	elements = 0;
 	hexBoard.resize(11);
@@ -15,7 +16,9 @@ graph::graph(){
 		}
 	}//end for loop that creates the nodes within the board
 }//end graph constructor, previously make_graph
+
 //checks if the given node has values in its surrounding nodes or is on an edge
+//used for the favor system, may be taken out
 bool graph::nodeHasNeighbors(node temp)
 {
 	int r = temp.getRow();
@@ -223,15 +226,26 @@ void graph::aiSetMove(char player, int r, int c){
 void graph::randomlyPopulate()
 {
 	int r, c;
+	std::vector<location> availableMoves;
+	//this will load the vector with open locations, allowing for less random move time
+	for(int tempR = 0; tempR<11; tempR++){
+		for(int tempC = 0; tempC < 11; tempC++)
+		{
+			if(hexBoard[tempR][tempC].getEntry() != 'W' && hexBoard[tempR][tempC].getEntry() != 'B')
+			{
+				//availableMoves.resize(availableMoves.size() + 1);
+				availableMoves.push_back(location(tempR, tempC));
+			}//end check if empty
+		}
+	}//end search for empty location graph traversal
+
 	for (int i = 0; i < 121 && !checkFull(); i++)
 	{
-		r = rand() % 11;
-		c = rand() % 11;
-		while (hexBoard[r][c].getEntry() == 'W' || hexBoard[r][c].getEntry() == 'B')
-		{
-			r = rand() % 11;
-			c = rand() % 11;
-		}
+		int loc = rand() % availableMoves.size();
+		r = availableMoves.at(loc).row;
+		c = availableMoves.at(loc).col;
+		availableMoves.erase(availableMoves.begin() + loc);
+
 		elements++;
 		if (elements >= 90 && i % 5 == 0)
 		{
@@ -526,3 +540,9 @@ std::ostream& operator<< (std::ostream &out, const graph &g)
 	std::cout << std::endl;
 	return out;
 }//end overloaded << function
+
+location::location(int r, int c)
+{
+	row = r;
+	col = c;
+}
