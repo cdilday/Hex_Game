@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <vector>
+#include <thread>
 #include "graph.h"
 
 using namespace std;
