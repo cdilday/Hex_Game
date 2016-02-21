@@ -16,7 +16,7 @@ inline double probability(){ return 1.0*rand() / RAND_MAX; }// probability funct
 //runs each next possible move in the graph and then randomly populates it, then checks to see who won.
 //Repeats 100 times and keeps track of which node won the most, then gives that node's row and column 
 //value back to the playAIGame function to make that move
-bool monteCarloAI(graph realBoard, char player, int& row, int& column)
+void monteCarloAI(graph realBoard, char player, int& row, int& column, bool& noChance)
 {
 	graph board = realBoard;
 	graph tempBoard = board;
@@ -68,7 +68,7 @@ bool monteCarloAI(graph realBoard, char player, int& row, int& column)
 	}//end row traversing 
 
 	//no Wins means that the AI simulated all moves and couldn't see any possible way to win
-	return noWins;
+	noChance = noWins;
 }//end monteCarloAI
 
 //plays the game between 2 Human Players
@@ -119,7 +119,11 @@ void playAIGame(graph board){
 			}
 		}
 
-		bool noChance = monteCarloAI(board, aIplayer, r, c);
+		bool noChance = true;
+		thread first(monteCarloAI, board, aIplayer, ref(r), ref(c), ref(noChance));
+
+		first.join();
+		
 		
 		if (noChance)
 		{
