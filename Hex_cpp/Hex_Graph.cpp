@@ -71,6 +71,146 @@ void monteCarloAI(graph realBoard, char player, int& row, int& column, bool& noC
 	noChance = noWins;
 }//end monteCarloAI
 
+void checkTopHalf(graph realBoard, char player, int& rowTop, int& columnTop, bool& noChance, int& winningFavor) {
+	graph board = realBoard;
+	graph tempBoard = board;
+	bool checkUsed = false;
+	bool bypass = false;
+	bool noWins = true;
+	int tempWins = 0, tempFavor = 0;
+	//loops to traverse every piece on the board
+	for (int r = 0; r < 6; r++)
+	{
+		for (int c = 0; c < 11; c++)
+		{
+			if (!bypass && !board.checkBlocked(board.hexBoard[r][c], player) && board.hexBoard[r][c].getEntry() == '-')
+			{
+				tempBoard = board;
+				//loop that simulates the board moves
+				for (int i = 0; i < 1000; i++)
+				{
+					tempBoard.aiSetMove(player, r, c);
+					tempBoard.randomlyPopulate();
+					if (tempBoard.aICheckVictory(player, tempBoard.hexBoard[r][c], checkUsed))
+					{
+						tempWins++;
+						if (checkUsed)
+							tempFavor++;
+						noWins = false;
+					}//keeps track of wins, and if it was used in the win add to its favor
+					tempBoard = board;
+					checkUsed = false;
+				}// keeps track of how many times it wins with that move
+				tempFavor += tempWins;
+				if (tempWins == 1000)
+				{
+					bypass = true;
+					rowTop = r;
+					columnTop = c;
+					winningFavor = tempFavor;
+				}//this ignores favor and makes the move if it won 100% of the time
+				if (!bypass && tempFavor >= winningFavor)
+				{
+					rowTop = r;
+					columnTop = c;
+					winningFavor = tempFavor;
+				}// replaces the coordinates if the move won more often
+				cout << "Wins for " << r << " " << c << ": " << tempFavor << endl;
+				tempWins = 0; tempFavor = 0;
+				board.hexBoard[r][c].setEntry('-');
+			}//end if the chosen 
+		}//end column traversing
+	}//end row traversing 
+
+	 //no Wins means that the AI simulated all moves and couldn't see any possible way to win
+	noChance = noWins;
+}//end checkTopHalf
+
+void checkBottomHalf(graph realBoard, char player, int& rowBottom, int& columnBottom, bool& noChance, int& winningFavor) {
+	graph board = realBoard;
+	graph tempBoard = board;
+	bool checkUsed = false;
+	bool bypass = false;
+	bool noWins = true;
+	int tempWins = 0, tempFavor = 0;
+	//loops to traverse every piece on the board
+	for (int r = 10; r >= 6; r--)
+	{
+		for (int c = 0; c < 11; c++)
+		{
+			if (!bypass && !board.checkBlocked(board.hexBoard[r][c], player) && board.hexBoard[r][c].getEntry() == '-')
+			{
+				tempBoard = board;
+				//loop that simulates the board moves
+				for (int i = 0; i < 1000; i++)
+				{
+					tempBoard.aiSetMove(player, r, c);
+					tempBoard.randomlyPopulate();
+					if (tempBoard.aICheckVictory(player, tempBoard.hexBoard[r][c], checkUsed))
+					{
+						tempWins++;
+						if (checkUsed)
+							tempFavor++;
+						noWins = false;
+					}//keeps track of wins, and if it was used in the win add to its favor
+					tempBoard = board;
+					checkUsed = false;
+				}// keeps track of how many times it wins with that move
+				tempFavor += tempWins;
+				if (tempWins == 1000)
+				{
+					bypass = true;
+					rowBottom = r;
+					columnBottom = c;
+					winningFavor = 1000;
+				}//this ignores favor and makes the move if it won 100% of the time
+				if (!bypass && tempFavor >= winningFavor)
+				{
+					rowBottom = r;
+					columnBottom = c;
+					winningFavor = tempFavor;
+				}// replaces the coordinates if the move won more often
+				cout << "Wins for " << r << " " << c << ": " << tempFavor << endl;
+				tempWins = 0; tempFavor = 0;
+				board.hexBoard[r][c].setEntry('-');
+			}//end if the chosen 
+		}//end column traversing
+	}//end row traversing 
+	noChance = noWins;
+	cout << "returning " << rowBottom << " " << columnBottom << endl;
+}//end checkBottomHalf
+
+void threadedMonteCarloAI(graph realBoard, char player, int& row, int& column, bool& noChance)
+{
+	int rTop, cTop, rBottom, cBottom;
+	int favorTop = 0, favorBottom = 0;
+	bool noChanceTop = true, noChanceBottom = true;
+	thread topThread(checkTopHalf, realBoard, player, ref(rTop), ref(cTop), ref(noChanceTop), ref(favorTop));
+	thread bottomThread(checkBottomHalf, realBoard, player, ref(rBottom), ref(cBottom), ref(noChanceBottom), ref(favorBottom));
+	
+	//join the threads
+	topThread.join();
+	bottomThread.join();
+	if (noChanceTop && noChanceBottom) {
+		noChance = true;
+		return;
+	}
+	else {
+		noChance = false;
+	}
+	cout << "Top: " << favorTop << " Bottom:" << favorBottom << endl;
+	if (favorTop >= favorBottom) {
+		row = rTop;
+		column = cTop;
+		cout << "Most favorable Move is Top " << rTop << " " << cTop << endl;
+	}
+	else {
+		row = rBottom;
+		column = cBottom;
+		cout << "Most favorable Move is Bottom " << rBottom << " " << cBottom << endl;
+	}
+}//end threadedMonteCarloAI
+
 //plays the game between 2 Human Players
 void playGame(graph board){
 	cout << "Starting a game of Hex" << endl;
@@ -119,11 +259,15 @@ void playAIGame(graph board){
 			}
 		}
 
+		time_t startTimer;
+		time_t endTimer;
+		time(&startTimer);
 		bool noChance = true;
-		thread first(monteCarloAI, board, aIplayer, ref(r), ref(c), ref(noChance));
-
-		first.join();
-		
+		threadedMonteCarloAI( board, aIplayer, ref(r), ref(c), ref(noChance));
+		time(&endTimer);
+		float seconds = difftime(endTimer, startTimer);
+		cout << "Monte Carlo took " << seconds << " Seconds" << endl;
+		cout << "AI moved to Row " << r << ", Column " << c << endl;
 		
 		if (noChance)
 		{
