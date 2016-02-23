@@ -7,6 +7,7 @@
 #include <vector>
 #include <thread>
 #include "graph.h"
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 inline double probability(){ return 1.0*rand() / RAND_MAX; }// probability function returns a random number below 1
@@ -356,9 +357,26 @@ bool playPureAIGame(graph board, char player){
 
 int main(int argc, char** argv)
 {
+	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+	sf::CircleShape shape(100.f);
+	shape.setFillColor(sf::Color::Green);
+
+	while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
+
+		window.clear();
+		window.draw(shape);
+		window.display();
+	}
 	srand(time(0));
 	graph test;
 	playAIGame(test);
 	system("PAUSE");
 	return 0;
-}//end main function
+}
