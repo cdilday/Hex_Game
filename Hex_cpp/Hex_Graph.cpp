@@ -355,25 +355,70 @@ bool playPureAIGame(graph board, char player){
           9 - - - - - - - - - - -
           10 - - - - - - - - - - -*/
 
+
+void renderingThread(sf::RenderWindow* window)
+{
+	//rendering loop
+	while (window->isOpen()) {
+		//load font stuff
+		sf::Font font;
+		if (!font.loadFromFile("C:/Users/Chris/Documents/Hex_Game/Hex_cpp/arial.ttf"))
+		{
+			//error for loading fonts here
+		}
+		
+		//draw board, start with column numbers
+		for (int c = 0; c < 11; c++) {
+			sf::Text colNum;
+			colNum.setFont(font);
+			colNum.setString(to_string(c + 1));
+			colNum.setColor(sf::Color::White);
+			colNum.setCharacterSize(24);
+			//get information to center properly regardless of string size
+			sf::FloatRect textRect = colNum.getLocalBounds();
+			colNum.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+			colNum.setPosition(68 + (c * 38), 22);
+			window->draw(colNum);
+		}
+		//now the actual board
+		for (int r = 0; r < 11; r++) {
+			//row's number
+			sf::Text rowNum;
+			rowNum.setFont(font);
+			rowNum.setString(to_string(r + 1));
+			rowNum.setColor(sf::Color::White);
+			rowNum.setCharacterSize(24);
+			//get information to center properly regardless of string size
+			sf::FloatRect textRect = rowNum.getLocalBounds();
+			rowNum.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+			rowNum.setPosition(35 + (r*20), 60 + (r * 33));
+			window->draw(rowNum);
+			//this row's hexagons
+			for (int c = 0; c < 11; c++) {
+				sf::CircleShape hexagon(20, 6);
+				hexagon.setPosition(50 + (c * 38) + (r * 20), 40 + (r *33));
+				hexagon.setOutlineThickness(2);
+				hexagon.setOutlineColor(sf::Color(150, 150, 150));
+				window->draw(hexagon);
+			}
+		}
+		//end frame
+		window->display();
+	}
+}
+
 int main(int argc, char** argv)
 {
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+	sf::RenderWindow window(sf::VideoMode(800, 600), "OpenGL");
 
-	while (window.isOpen())
-	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
+	// deactivate its OpenGL context
+	window.setActive(false);
 
-		window.clear();
-		window.draw(shape);
-		window.display();
-	}
+	// launch the rendering thread
+	sf::Thread thread(&renderingThread, &window);
+	thread.launch();
+
+
 	srand(time(0));
 	graph test;
 	playAIGame(test);
