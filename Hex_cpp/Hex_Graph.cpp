@@ -12,7 +12,6 @@
 using namespace std;
 inline double probability(){ return 1.0*rand() / RAND_MAX; }// probability function returns a random number below 1
 
-//checks if it is near another node. Will be used in Monte Carlo to make the AI less random. Will also return true if it's along the edges
 
 //runs each next possible move in the graph and then randomly populates it, then checks to see who won.
 //Repeats 100 times and keeps track of which node won the most, then gives that node's row and column 
@@ -235,7 +234,7 @@ void playGame(graph board){
 	}
 }
 //plays the game between 1 player and an AI
-void playAIGame(graph board){
+void playAIGame(graph& board){
 	cout << "Starting a game of Hex with an AI opponent" << endl;
 	cout << "Pick W or B as your color (W goes first): ";
 	char player, aIplayer;
@@ -356,7 +355,7 @@ bool playPureAIGame(graph board, char player){
           10 - - - - - - - - - - -*/
 
 
-void renderingThread(sf::RenderWindow* window)
+void renderingThread(sf::RenderWindow* window, graph* board)
 {
 	//rendering loop
 	while (window->isOpen()) {
@@ -400,6 +399,24 @@ void renderingThread(sf::RenderWindow* window)
 				hexagon.setOutlineThickness(2);
 				hexagon.setOutlineColor(sf::Color(150, 150, 150));
 				window->draw(hexagon);
+				//now check if a piece has been placed on it
+				if (board->hexBoard[r][c].getEntry() == 'W') {
+					//place white piece
+					sf::CircleShape whitePiece(14);
+					whitePiece.setFillColor(sf::Color::White);
+					whitePiece.setOutlineColor(sf::Color::Black);
+					whitePiece.setOutlineThickness(2);
+					whitePiece.setPosition(56 + (c * 38) + (r * 20), 46 + (r * 33));
+					window->draw(whitePiece);
+				}
+				else if (board->hexBoard[r][c].getEntry() == 'B') {
+					sf::CircleShape blackPiece(14);
+					blackPiece.setFillColor(sf::Color::Black);
+					blackPiece.setOutlineColor(sf::Color::Black);
+					blackPiece.setOutlineThickness(2);
+					blackPiece.setPosition(56 + (c * 38) + (r * 20), 46 + (r * 33));
+					window->draw(blackPiece);
+				}
 			}
 		}
 		//end frame
@@ -414,13 +431,13 @@ int main(int argc, char** argv)
 	// deactivate its OpenGL context
 	window.setActive(false);
 
-	// launch the rendering thread
-	sf::Thread thread(&renderingThread, &window);
-	thread.launch();
-
-
 	srand(time(0));
 	graph test;
+
+	// launch the rendering thread
+	sf::Thread renderThread(bind(&renderingThread, &window, &test ));
+	renderThread.launch();
+
 	playAIGame(test);
 	system("PAUSE");
 	return 0;
