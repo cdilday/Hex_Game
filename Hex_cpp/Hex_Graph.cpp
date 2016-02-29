@@ -29,7 +29,7 @@ void monteCarloAI(graph realBoard, char player, int& row, int& column, bool& noC
 	{
 		for (int c = 0; c < 11; c++)
 		{
-			if (!bypass && !board.checkBlocked(board.hexBoard[r][c], player) && board.hexBoard[r][c].getEntry() == '-')
+			if (!bypass && !board.checkBlocked(board.getNodeAt(r,c), player) && board.getEntryAt(r,c) == '-')
 			{
 				tempBoard = board;
 				//loop that simulates the board moves
@@ -37,7 +37,7 @@ void monteCarloAI(graph realBoard, char player, int& row, int& column, bool& noC
 				{
 					tempBoard.aiSetMove(player, r, c);
 					tempBoard.randomlyPopulate();
-					if (tempBoard.aICheckVictory(player, tempBoard.hexBoard[r][c], checkUsed))
+					if (tempBoard.aICheckVictory(player, tempBoard.getNodeAt(r,c), checkUsed))
 					{
 						tempWins++;
 						if (checkUsed)
@@ -62,7 +62,7 @@ void monteCarloAI(graph realBoard, char player, int& row, int& column, bool& noC
 				}// replaces the coordinates if the move won more often
 				cout << "Wins for " << r << " " << c << ": " << tempFavor << endl;
 				tempWins = 0; tempFavor = 0;
-				board.hexBoard[r][c].setEntry('-');
+				board.getNodeAt(r,c).setEntry('-');
 			}//end if the chosen 
 		}//end column traversing
 	}//end row traversing 
@@ -83,7 +83,7 @@ void checkTopHalf(graph realBoard, char player, int& rowTop, int& columnTop, boo
 	{
 		for (int c = 0; c < 11; c++)
 		{
-			if (!bypass && !board.checkBlocked(board.hexBoard[r][c], player) && board.hexBoard[r][c].getEntry() == '-')
+			if (!bypass && !board.checkBlocked(board.getNodeAt(r,c), player) && board.getEntryAt(r,c) == '-')
 			{
 				tempBoard = board;
 				//loop that simulates the board moves
@@ -91,7 +91,7 @@ void checkTopHalf(graph realBoard, char player, int& rowTop, int& columnTop, boo
 				{
 					tempBoard.aiSetMove(player, r, c);
 					tempBoard.randomlyPopulate();
-					if (tempBoard.aICheckVictory(player, tempBoard.hexBoard[r][c], checkUsed))
+					if (tempBoard.aICheckVictory(player, tempBoard.getNodeAt(r,c), checkUsed))
 					{
 						tempWins++;
 						if (checkUsed)
@@ -117,7 +117,7 @@ void checkTopHalf(graph realBoard, char player, int& rowTop, int& columnTop, boo
 				}// replaces the coordinates if the move won more often
 				cout << "Wins for " << r << " " << c << ": " << tempFavor << endl;
 				tempWins = 0; tempFavor = 0;
-				board.hexBoard[r][c].setEntry('-');
+				board.getNodeAt(r,c).setEntry('-');
 			}//end if the chosen 
 		}//end column traversing
 	}//end row traversing 
@@ -138,7 +138,7 @@ void checkBottomHalf(graph realBoard, char player, int& rowBottom, int& columnBo
 	{
 		for (int c = 0; c < 11; c++)
 		{
-			if (!bypass && !board.checkBlocked(board.hexBoard[r][c], player) && board.hexBoard[r][c].getEntry() == '-')
+			if (!bypass && !board.checkBlocked(board.getNodeAt(r,c), player) && board.getEntryAt(r,c) == '-')
 			{
 				tempBoard = board;
 				//loop that simulates the board moves
@@ -146,7 +146,7 @@ void checkBottomHalf(graph realBoard, char player, int& rowBottom, int& columnBo
 				{
 					tempBoard.aiSetMove(player, r, c);
 					tempBoard.randomlyPopulate();
-					if (tempBoard.aICheckVictory(player, tempBoard.hexBoard[r][c], checkUsed))
+					if (tempBoard.aICheckVictory(player, tempBoard.getNodeAt(r,c), checkUsed))
 					{
 						tempWins++;
 						if (checkUsed)
@@ -172,7 +172,7 @@ void checkBottomHalf(graph realBoard, char player, int& rowBottom, int& columnBo
 				}// replaces the coordinates if the move won more often
 				cout << "Wins for " << r << " " << c << ": " << tempFavor << endl;
 				tempWins = 0; tempFavor = 0;
-				board.hexBoard[r][c].setEntry('-');
+				board.getNodeAt(r,c).setEntry('-');
 			}//end if the chosen 
 		}//end column traversing
 	}//end row traversing 
@@ -309,7 +309,7 @@ bool playPureAIGame(graph board, char player){
 	{
 		r = rand() % 11;
 		c = rand() % 11;
-		while (board.hexBoard[r][c].getEntry() == 'W' || board.hexBoard[r][c].getEntry() == 'B')
+		while (board.getEntryAt(r,c) == 'W' || board.getEntryAt(r,c) == 'B')
 		{
 			r = rand() % 11;
 			c = rand() % 11;
@@ -322,7 +322,7 @@ bool playPureAIGame(graph board, char player){
 		}
 		r = rand() % 11;
 		c = rand() % 11;
-		while (board.hexBoard[r][c].getEntry() == 'W' || board.hexBoard[r][c].getEntry() == 'B')
+		while (board.getEntryAt(r,c) == 'W' || board.getEntryAt(r,c) == 'B')
 		{
 			r = rand() % 11;
 			c = rand() % 11;
@@ -400,7 +400,7 @@ void renderingThread(sf::RenderWindow* window, graph* board)
 				hexagon.setOutlineColor(sf::Color(150, 150, 150));
 				window->draw(hexagon);
 				//now check if a piece has been placed on it
-				if (board->hexBoard[r][c].getEntry() == 'W') {
+				if (board->getEntryAt(r,c) == 'W') {
 					//place white piece
 					sf::CircleShape whitePiece(14);
 					whitePiece.setFillColor(sf::Color::White);
@@ -409,7 +409,7 @@ void renderingThread(sf::RenderWindow* window, graph* board)
 					whitePiece.setPosition(56 + (c * 38) + (r * 20), 46 + (r * 33));
 					window->draw(whitePiece);
 				}
-				else if (board->hexBoard[r][c].getEntry() == 'B') {
+				else if (board->getEntryAt(r,c) == 'B') {
 					sf::CircleShape blackPiece(14);
 					blackPiece.setFillColor(sf::Color::Black);
 					blackPiece.setOutlineColor(sf::Color::Black);

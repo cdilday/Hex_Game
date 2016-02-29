@@ -19,10 +19,12 @@ public:
 	bool aIRecursivePathW(std::vector<std::vector<bool> > &, node, node, node, bool&);
 	bool aIRecursivePathB(std::vector<std::vector<bool> > &, node, node, node, bool&);
 	friend std::ostream& operator<< (std::ostream &out, const graph & g);
-	std::vector< std::vector<node> > hexBoard;
+	char getEntryAt(int, int);
+	node getNodeAt(int, int);
 private:
 	int size;
 	int elements;
+	std::vector< std::vector<node> > hexBoard;
 };//end graph class
 
 class location{

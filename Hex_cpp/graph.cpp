@@ -516,6 +516,17 @@ bool graph::aIRecursivePathB(std::vector<std::vector<bool> > &processed, node st
 	}
 	return false; //secondary base case when it hits a dead-end node
 }
+
+//returns char value at given location in the graph
+char graph::getEntryAt(int row, int col) {
+	return hexBoard[row][col].getEntry();
+}
+
+//return the actual node at the given location in the graph
+node graph::getNodeAt(int row, int col) {
+	return hexBoard[row][col];
+}
+
 //Overloaded <<, prints out the graph
 std::ostream& operator<< (std::ostream &out, const graph &g)
 {
