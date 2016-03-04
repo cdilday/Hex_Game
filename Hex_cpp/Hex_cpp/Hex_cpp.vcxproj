@@ -58,7 +58,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>C:\SFML-2.3.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\SFML-2.3.2\include;C:\Users\Chris\Documents\Hex_Game\Hex_cpp</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -75,11 +75,13 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\SFML-2.3.2\include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\SFML-2.3.2\include</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\graph.h" />
     <ClInclude Include="..\node.h" />
+    <ClInclude Include="Hex_Graph.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
