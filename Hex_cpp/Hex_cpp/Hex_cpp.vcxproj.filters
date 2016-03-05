@@ -27,6 +27,9 @@
     <ClCompile Include="..\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Hex_GUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\graph.h">
@@ -38,5 +41,11 @@
     <ClInclude Include="Hex_Graph.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Hex_GUI.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\arial.ttf" />
   </ItemGroup>
 </Project>

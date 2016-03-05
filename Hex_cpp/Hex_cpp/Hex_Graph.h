@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <thread>
 #include "graph.h"
-#include <SFML/Graphics.hpp>
 
 
 // probability function returns a random number below 1
@@ -28,5 +27,3 @@ void playAIGame(graph& board);
 
  //Returns true if the given player won, false if the given player lost. Places randomly on board
 bool playPureAIGame(graph board, char player);
-
-void renderingThread(sf::RenderWindow* window, graph* board);

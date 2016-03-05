@@ -13,10 +13,11 @@ int main(int argc, char** argv)
 	graph test;
 
 	// launch the rendering thread
-	sf::Thread renderThread(bind(&renderingThread, &window, &test));
-	renderThread.launch();
-
-	playAIGame(test);
+	//sf::Thread renderThread(bind(&renderingThread, &window, &test));
+	//renderThread.launch();
+	thread gameThread(playAIGame, test);
+	renderingThread(&window, &test);
+	
 	system("PAUSE");
 	return 0;
 }
