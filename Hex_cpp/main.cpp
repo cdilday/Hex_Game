@@ -1,4 +1,4 @@
-#include "Hex_Graph.h"
+#include "Hex_GUI.h"
 
 using namespace std;
 
@@ -16,7 +16,7 @@ int main(int argc, char** argv)
 	//sf::Thread renderThread(bind(&renderingThread, &window, &test));
 	//renderThread.launch();
 	thread gameThread(playAIGame, test);
-	renderingThread(&window, &test);
+	GUIHandler(&window, &test);
 	
 	system("PAUSE");
 	return 0;

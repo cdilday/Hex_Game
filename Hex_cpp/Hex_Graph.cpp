@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-#include "graph.h"
+#include "Hex_Graph.h"
 #include <SFML/Graphics.hpp>
 
 using namespace std;
