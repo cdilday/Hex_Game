@@ -10,7 +10,8 @@
 using namespace std;
 
 void handleEvents(sf::RenderWindow* window, graph* board) {
-	sf::Event event;
+	sf::Event event; 
+	int x, y, tempx, tempy;
 	while (window->pollEvent(event)) {
 		switch (event.type) {
 		case sf::Event::Closed:
@@ -18,6 +19,17 @@ void handleEvents(sf::RenderWindow* window, graph* board) {
 			return;
 		case sf::Event::MouseButtonPressed:
 			//cout << "Mouse pressed at " << event.mouseButton.x << ", " << event.mouseButton.y << endl;
+			tempx = event.mouseButton.x + 17;
+			tempy = event.mouseButton.y - 10;
+			y = (int)((float)(tempy / 33));
+			x = (tempx - 50 - (20 * y)) / 38;
+			cout << "Row " << y-1 << ", Col " << x << endl;
+			//if in bounds and the board is waiting for player input
+			if (x >= 0 && x < 11 && y-1>= 0 && y-1 < 11 && board->getWaitingForPlayer() && !board->getIsThinking()) {
+				board->aiSetMove('W', y-1, x);
+				board->setWaitingForPlayer(false);
+			}
+			cout << board->getWaitingForPlayer();
 			break;
 		case sf::Event::KeyPressed:
 			break;

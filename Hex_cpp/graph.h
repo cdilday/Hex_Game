@@ -21,7 +21,13 @@ public:
 	friend std::ostream& operator<< (std::ostream &out, const graph & g);
 	char getEntryAt(int, int);
 	node getNodeAt(int, int);
+	bool getWaitingForPlayer() { return waitingForPlayer; }
+	void setWaitingForPlayer(bool wait) { waitingForPlayer = wait; }
+	bool getIsThinking() { return isThinking; }
+	void setIsThinking(bool thinking) { isThinking = thinking; }
 private:
+	bool waitingForPlayer;
+	bool isThinking;
 	int size;
 	int elements;
 	std::vector< std::vector<node> > hexBoard;

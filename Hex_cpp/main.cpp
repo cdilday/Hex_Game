@@ -9,13 +9,13 @@ int main(int argc, char** argv)
 	// deactivate its OpenGL context
 	window.setActive(false);
 
-	srand(time(0));
+	srand((int)time(0));
 	graph test;
 
 	// launch the rendering thread
 	//sf::Thread renderThread(bind(&renderingThread, &window, &test));
 	//renderThread.launch();
-	thread gameThread(playAIGame, test);
+	thread gameThread(playAIGame, &test);
 	GUIHandler(&window, &test);
 	
 	system("PAUSE");

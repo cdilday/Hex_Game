@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <thread>
+#include <Windows.h>
 #include "Hex_Graph.h"
 #include <SFML/Graphics.hpp>
 
@@ -234,7 +235,7 @@ void playGame(graph board){
 	}
 }
 //plays the game between 1 player and an AI
-void playAIGame(graph& board){
+void playAIGame(graph* board){
 	cout << "Starting a game of Hex with an AI opponent" << endl;
 	cout << "Pick W or B as your color (W goes first): ";
 	char player, aIplayer;
@@ -243,56 +244,62 @@ void playAIGame(graph& board){
 		aIplayer = 'B';
 	else
 		aIplayer = 'W';
-	cout << board;
+	cout << *board;
 	int r, c;
+
+	board->setIsThinking(false);
+	board->setWaitingForPlayer(true);
 
 	for (int turn = 1; turn <= 121; turn++)
 	{
-		if (player == 'W'){
-			board.setMove(player);
-			turn++;
-			cout << board;
-			if (board.checkVictory(player))
+		if (player == 'W') {
+			while (board->getWaitingForPlayer() && !board->getIsThinking()) {
+				Sleep(1000);
+				cout << board->getWaitingForPlayer() << endl;
+			}
+			if (board->checkVictory(player))
 			{
 				cout << player << " Player Wins" << endl;
 				break;
 			}
 		}
-
+		board->setIsThinking(true);
 		time_t startTimer;
 		time_t endTimer;
 		time(&startTimer);
 		bool noChance = true;
-		threadedMonteCarloAI( board, aIplayer, ref(r), ref(c), ref(noChance));
+		threadedMonteCarloAI(*board, aIplayer, ref(r), ref(c), ref(noChance));
 		time(&endTimer);
 		float seconds = difftime(endTimer, startTimer);
 		cout << "Monte Carlo took " << seconds << " Seconds" << endl;
 		cout << "AI moved to Row " << r << ", Column " << c << endl;
-		
+
 		if (noChance)
 		{
-			cout << aIplayer << " player gives up, as they see no good moves left!"<< endl;
+			cout << aIplayer << " player gives up, as they see no good moves left!" << endl;
 			break;
 		}
 
+		board->aiSetMove(aIplayer, r, c);
+
 		if (aIplayer == 'W')
-		{
-			board.aiSetMove(aIplayer, r, c);
 			turn++;
-		}
-		else
-			board.aiSetMove(aIplayer, r, c);
-		cout << board;
-		if (board.checkVictory(aIplayer))
+		cout << *board;
+		if (board->checkVictory(aIplayer))
 		{
 			cout << aIplayer << " Player Wins" << endl;
 			break;
 		}
+		board->setIsThinking(false);
+		board->setWaitingForPlayer(true);
 		if (player == 'B')
 		{
-			board.setMove(player);
-			cout << board;
-			if (board.checkVictory(player))
+			while (board->getWaitingForPlayer() && !board->getIsThinking()) {
+				Sleep(1000);
+				cout << board->getWaitingForPlayer() << endl;
+			}
+			cout << *board;
+			if (board->checkVictory(player))
 			{
 				cout << player << " Player Wins" << endl;
 				break;

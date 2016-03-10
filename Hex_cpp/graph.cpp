@@ -15,6 +15,8 @@ graph::graph(){
 			hexBoard[r][c] = node(r, c);
 		}
 	}//end for loop that creates the nodes within the board
+	waitingForPlayer = true;
+	isThinking = false;
 }//end graph constructor, previously make_graph
 
 //checks if the given node has values in its surrounding nodes or is on an edge

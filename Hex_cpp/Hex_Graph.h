@@ -25,9 +25,7 @@ void threadedMonteCarloAI(graph realBoard, char player, int& row, int& column, b
 void playGame(graph board);
 
 //plays the game between 1 player and an AI
-void playAIGame(graph& board);
+void playAIGame(graph* board);
 
  //Returns true if the given player won, false if the given player lost. Places randomly on board
 bool playPureAIGame(graph board, char player);
-
-void renderingThread(sf::RenderWindow* window, graph* board);
