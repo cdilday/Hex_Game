@@ -25,9 +25,12 @@ public:
 	void setWaitingForPlayer(bool wait) { waitingForPlayer = wait; }
 	bool getIsThinking() { return isThinking; }
 	void setIsThinking(bool thinking) { isThinking = thinking; }
+	char getPlayer() { return player; }
+	void setPlayer(char p) { player = p; }
 private:
 	bool waitingForPlayer;
 	bool isThinking;
+	char player;
 	int size;
 	int elements;
 	std::vector< std::vector<node> > hexBoard;

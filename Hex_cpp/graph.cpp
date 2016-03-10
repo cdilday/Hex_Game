@@ -17,6 +17,7 @@ graph::graph(){
 	}//end for loop that creates the nodes within the board
 	waitingForPlayer = true;
 	isThinking = false;
+	player = '0';
 }//end graph constructor, previously make_graph
 
 //checks if the given node has values in its surrounding nodes or is on an edge

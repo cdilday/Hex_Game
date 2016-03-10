@@ -238,8 +238,13 @@ void playGame(graph board){
 void playAIGame(graph* board){
 	cout << "Starting a game of Hex with an AI opponent" << endl;
 	cout << "Pick W or B as your color (W goes first): ";
+	while (board->getPlayer() == '0') {
+		Sleep(100);
+		cout << "waiting for Player to select Color..." << endl;
+	}
 	char player, aIplayer;
-	cin >> player;
+	player = board->getPlayer();
+	//cin >> player;
 	if (player == 'W')
 		aIplayer = 'B';
 	else
