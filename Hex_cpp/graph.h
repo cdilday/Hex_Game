@@ -11,7 +11,7 @@ public:
 	bool checkFull();
 	void setMove(char);
 	void aiSetMove(char, int, int);
-	void randomlyPopulate();
+	void randomlyPopulate(char);
 	bool checkVictory(char);
 	bool recursivePathW(std::vector<std::vector<bool> > &, node, node);
 	bool recursivePathB(std::vector<std::vector<bool> > &, node, node);

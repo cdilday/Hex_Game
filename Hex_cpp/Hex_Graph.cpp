@@ -37,7 +37,7 @@ void monteCarloAI(graph realBoard, char player, int& row, int& column, bool& noC
 				for (int i = 0; i < 1000; i++)
 				{
 					tempBoard.aiSetMove(player, r, c);
-					tempBoard.randomlyPopulate();
+					tempBoard.randomlyPopulate(player);
 					if (tempBoard.aICheckVictory(player, tempBoard.getNodeAt(r,c), checkUsed))
 					{
 						tempWins++;
@@ -91,12 +91,12 @@ void checkTopHalf(graph realBoard, char player, int& rowTop, int& columnTop, boo
 				for (int i = 0; i < 1000; i++)
 				{
 					tempBoard.aiSetMove(player, r, c);
-					tempBoard.randomlyPopulate();
+					tempBoard.randomlyPopulate(player);
 					if (tempBoard.aICheckVictory(player, tempBoard.getNodeAt(r,c), checkUsed))
 					{
 						tempWins++;
-						if (checkUsed)
-							tempFavor++;
+						//if (checkUsed)
+							//tempFavor++;
 						noWins = false;
 					}//keeps track of wins, and if it was used in the win add to its favor
 					tempBoard = board;
@@ -146,12 +146,12 @@ void checkBottomHalf(graph realBoard, char player, int& rowBottom, int& columnBo
 				for (int i = 0; i < 1000; i++)
 				{
 					tempBoard.aiSetMove(player, r, c);
-					tempBoard.randomlyPopulate();
+					tempBoard.randomlyPopulate(player);
 					if (tempBoard.aICheckVictory(player, tempBoard.getNodeAt(r,c), checkUsed))
 					{
 						tempWins++;
-						if (checkUsed)
-							tempFavor++;
+						//if (checkUsed)
+							//tempFavor++;
 						noWins = false;
 					}//keeps track of wins, and if it was used in the win add to its favor
 					tempBoard = board;

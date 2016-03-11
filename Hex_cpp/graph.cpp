@@ -225,8 +225,8 @@ void graph::aiSetMove(char player, int r, int c){
 		hexBoard[r][c - 1].setConnection(2, &hexBoard[r][c]);
 	}
 }//end aISetMove
-//randomly populate the graph evenly with W & B
-void graph::randomlyPopulate()
+//randomly populate the graph evenly with W & B, where lastplaced is the last color that was placed on the board
+void graph::randomlyPopulate(char lastPlaced)
 {
 	int r, c;
 	std::vector<location> availableMoves;
@@ -241,8 +241,12 @@ void graph::randomlyPopulate()
 			}//end check if empty
 		}
 	}//end search for empty location graph traversal
-
-	for (int i = 0; i < 121 && !checkFull(); i++)
+	int i;
+	if (lastPlaced == 'W')
+		i = 1;
+	else
+		i = 0;
+	for (i; i < 121 && !checkFull(); i++)
 	{
 		int loc = rand() % availableMoves.size();
 		r = availableMoves.at(loc).row;
