@@ -36,7 +36,7 @@ void handleEvents(sf::RenderWindow* window, graph* board) {
 			}
 			else {
 				//check if the reset button has been pressed
-				if (distance(tempx, tempy, 575, 475) <= 25) {
+				if (distance(tempx, tempy, 675, 125) <= 25) {
 					board->resetBoard();
 					cout << "Reseting game" << endl;
 				}
@@ -46,9 +46,9 @@ void handleEvents(sf::RenderWindow* window, graph* board) {
 					tempy -= 10;
 					y = (int)((float)(tempy / 33));
 					x = (tempx - 50 - (20 * y)) / 38;
-					cout << "Row " << y - 1 << ", Col " << x << endl;
 					//if in bounds and the board is waiting for player input
 					if (x >= 0 && x < 11 && y - 1 >= 0 && y - 1 < 11 && board->getWaitingForPlayer() && !board->getIsThinking()) {
+						cout << "Row " << y - 1 << ", Col " << x << endl;
 						board->aiSetMove(board->getPlayer(), y - 1, x);
 						board->setWaitingForPlayer(false);
 					}
@@ -167,13 +167,20 @@ void drawBoard(sf::RenderWindow* window, graph* board) {
 			}
 		}
 	}
-	// reset Button
+	// reset Button & text
 	sf::CircleShape resetButton(25);
 	resetButton.setFillColor(sf::Color::Red);
 	resetButton.setOutlineColor(sf::Color::White);
 	resetButton.setOutlineThickness(2);
-	resetButton.setPosition(550, 450);
+	resetButton.setPosition(650, 100);
 	window->draw(resetButton);
+	sf::Text resetText;
+	resetText.setFont(font);
+	resetText.setColor(sf::Color::Red);
+	resetText.setCharacterSize(20);
+	resetText.setPosition(642, 150);
+	resetText.setString("RESET");
+	window->draw(resetText);
 
 	//now for text that displays the general state of the game
 	sf::Text loadText;

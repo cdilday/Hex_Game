@@ -32,6 +32,9 @@ void monteCarloAI(graph realBoard, char player, int& row, int& column, bool& noC
 		{
 			if (!bypass && !board.checkBlocked(board.getNodeAt(r,c), player) && board.getEntryAt(r,c) == '-')
 			{
+				//break out if the game has been reset
+				if (realBoard.getPlayer() == '0' || realBoard.getWaitingForPlayer() || !realBoard.getIsThinking())
+					return;
 				tempBoard = board;
 				//loop that simulates the board moves
 				for (int i = 0; i < 1000; i++)
@@ -72,8 +75,8 @@ void monteCarloAI(graph realBoard, char player, int& row, int& column, bool& noC
 	noChance = noWins;
 }//end monteCarloAI
 
-void checkTopHalf(graph realBoard, char player, int& rowTop, int& columnTop, bool& noChance, int& winningFavor) {
-	graph board = realBoard;
+void checkTopHalf(graph * realBoard, char player, int& rowTop, int& columnTop, bool& noChance, int& winningFavor) {
+	graph board = *realBoard;
 	graph tempBoard = board;
 	bool checkUsed = false;
 	bool bypass = false;
@@ -86,6 +89,9 @@ void checkTopHalf(graph realBoard, char player, int& rowTop, int& columnTop, boo
 		{
 			if (!bypass && !board.checkBlocked(board.getNodeAt(r,c), player) && board.getEntryAt(r,c) == '-')
 			{
+				//break out if the game has been reset
+				if (realBoard->getPlayer() == '0' || realBoard->getWaitingForPlayer() || !realBoard->getIsThinking())
+					return;
 				tempBoard = board;
 				//loop that simulates the board moves
 				for (int i = 0; i < 1000; i++)
@@ -127,8 +133,8 @@ void checkTopHalf(graph realBoard, char player, int& rowTop, int& columnTop, boo
 	noChance = noWins;
 }//end checkTopHalf
 
-void checkBottomHalf(graph realBoard, char player, int& rowBottom, int& columnBottom, bool& noChance, int& winningFavor) {
-	graph board = realBoard;
+void checkBottomHalf(graph * realBoard, char player, int& rowBottom, int& columnBottom, bool& noChance, int& winningFavor) {
+	graph board = *realBoard;
 	graph tempBoard = board;
 	bool checkUsed = false;
 	bool bypass = false;
@@ -141,6 +147,9 @@ void checkBottomHalf(graph realBoard, char player, int& rowBottom, int& columnBo
 		{
 			if (!bypass && !board.checkBlocked(board.getNodeAt(r,c), player) && board.getEntryAt(r,c) == '-')
 			{
+				//break out if the game has been reset
+				if (realBoard->getPlayer() == '0' || realBoard->getWaitingForPlayer() || !realBoard->getIsThinking())
+					return;
 				tempBoard = board;
 				//loop that simulates the board moves
 				for (int i = 0; i < 1000; i++)
@@ -181,7 +190,7 @@ void checkBottomHalf(graph realBoard, char player, int& rowBottom, int& columnBo
 	cout << "returning " << rowBottom << " " << columnBottom << endl;
 }//end checkBottomHalf
 
-void threadedMonteCarloAI(graph realBoard, char player, int& row, int& column, bool& noChance)
+void threadedMonteCarloAI(graph * realBoard, char player, int& row, int& column, bool& noChance)
 {
 	int rTop, cTop, rBottom, cBottom;
 	int favorTop = 0, favorBottom = 0;
@@ -236,81 +245,82 @@ void playGame(graph board){
 }
 //plays the game between 1 player and an AI
 void playAIGame(graph* board){
-	cout << "Starting a game of Hex with an AI opponent" << endl;
-	cout << "Pick W or B as your color (W goes first): ";
-	while (board->getPlayer() == '0') {
-		Sleep(100);
-		cout << "waiting for Player to select Color..." << endl;
-	}
-	char player, aIplayer;
-	player = board->getPlayer();
-	//cin >> player;
-	if (player == 'W')
-		aIplayer = 'B';
-	else
-		aIplayer = 'W';
-	cout << *board;
-	int r, c;
-
-	board->setIsThinking(false);
-	board->setWaitingForPlayer(true);
-
-	for (int turn = 1; turn <= 121; turn++)
-	{
+	while (true) {
+		while (board->getPlayer() == '0') {
+			Sleep(100);
+			cout << "Waiting for Player to select Color..." << endl;
+		}
+		char player, aIplayer;
+		player = board->getPlayer();
+		//cin >> player;
 		if (player == 'W') {
-			while (board->getWaitingForPlayer() && !board->getIsThinking()) {
-				Sleep(1000);
-				cout << board->getWaitingForPlayer() << endl;
-			}
-			if (board->checkVictory(player))
-			{
-				cout << player << " Player Wins" << endl;
-				break;
-			}
+			aIplayer = 'B';
+			board->setIsThinking(false);
+			board->setWaitingForPlayer(true);
 		}
-		board->setIsThinking(true);
-		time_t startTimer;
-		time_t endTimer;
-		time(&startTimer);
-		bool noChance = true;
-		threadedMonteCarloAI(*board, aIplayer, ref(r), ref(c), ref(noChance));
-		time(&endTimer);
-		float seconds = difftime(endTimer, startTimer);
-		cout << "Monte Carlo took " << seconds << " Seconds" << endl;
-		cout << "AI moved to Row " << r << ", Column " << c << endl;
-
-		if (noChance)
-		{
-			cout << aIplayer << " player gives up, as they see no good moves left!" << endl;
-			break;
+		else {
+			aIplayer = 'W';
+			board->setIsThinking(true);
+			board->setWaitingForPlayer(false);
 		}
-
-		board->aiSetMove(aIplayer, r, c);
-
-		if (aIplayer == 'W')
-			turn++;
 		cout << *board;
-		if (board->checkVictory(aIplayer))
+		int r, c;
+
+		for (int turn = 1; turn <= 121; turn++)
 		{
-			cout << aIplayer << " Player Wins" << endl;
-			break;
-		}
-		board->setIsThinking(false);
-		board->setWaitingForPlayer(true);
-		if (player == 'B')
-		{
-			while (board->getWaitingForPlayer() && !board->getIsThinking()) {
-				Sleep(1000);
-				cout << board->getWaitingForPlayer() << endl;
+			if (player == 'W') {
+				while (board->getWaitingForPlayer() && !board->getIsThinking()) {
+					Sleep(100);
+				}
+				if (board->checkVictory(player))
+				{
+					cout << player << " Player Wins" << endl;
+					break;
+				}
 			}
-			cout << *board;
-			if (board->checkVictory(player))
+			board->setIsThinking(true);
+			time_t startTimer;
+			time_t endTimer;
+			time(&startTimer);
+			bool noChance = true;
+			threadedMonteCarloAI(board, aIplayer, ref(r), ref(c), ref(noChance));
+			time(&endTimer);
+			float seconds = difftime(endTimer, startTimer);
+			cout << "Monte Carlo took " << seconds << " Seconds" << endl;
+			cout << "AI moved to Row " << r << ", Column " << c << endl;
+
+			if (noChance)
 			{
-				cout << player << " Player Wins" << endl;
+				cout << aIplayer << " player gives up, as they see no good moves left!" << endl;
 				break;
 			}
-		}//end if player is B move
-	}//end main for loop
+
+			board->aiSetMove(aIplayer, r, c);
+
+			if (aIplayer == 'W')
+				turn++;
+			cout << *board;
+			if (board->checkVictory(aIplayer))
+			{
+				cout << aIplayer << " Player Wins" << endl;
+				break;
+			}
+			board->setIsThinking(false);
+			board->setWaitingForPlayer(true);
+			if (player == 'B')
+			{
+				while (board->getWaitingForPlayer() && !board->getIsThinking()) {
+					Sleep(100);
+				}
+				cout << *board;
+				if (board->checkVictory(player))
+				{
+					cout << player << " Player Wins" << endl;
+					break;
+				}
+			}//end if player is B move
+		}//end main for loop
+	}//end core loop lopp
 }//end playAIGame
 
 //Returns true if the given player won, false if the given player lost. Places randomly on board

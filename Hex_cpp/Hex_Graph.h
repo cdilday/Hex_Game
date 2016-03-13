@@ -15,11 +15,11 @@ inline double probability();
 //value back to the playAIGame function to make that move
 void monteCarloAI(graph realBoard, char player, int& row, int& column, bool& noChance);
 
-void checkTopHalf(graph realBoard, char player, int& rowTop, int& columnTop, bool& noChance, int& winningFavor);
+void checkTopHalf(graph * realBoard, char player, int& rowTop, int& columnTop, bool& noChance, int& winningFavor);
 
-void checkBottomHalf(graph realBoard, char player, int& rowBottom, int& columnBottom, bool& noChance, int& winningFavor);
+void checkBottomHalf(graph * realBoard, char player, int& rowBottom, int& columnBottom, bool& noChance, int& winningFavor);
 
-void threadedMonteCarloAI(graph realBoard, char player, int& row, int& column, bool& noChance);
+void threadedMonteCarloAI(graph * realBoard, char player, int& row, int& column, bool& noChance);
 
  //plays the game between 2 Human Players
 void playGame(graph board);
