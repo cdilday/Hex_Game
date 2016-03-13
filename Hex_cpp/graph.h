@@ -19,6 +19,8 @@ public:
 	bool aIRecursivePathW(std::vector<std::vector<bool> > &, node, node, node, bool&);
 	bool aIRecursivePathB(std::vector<std::vector<bool> > &, node, node, node, bool&);
 	friend std::ostream& operator<< (std::ostream &out, const graph & g);
+	void resetBoard();
+	
 	char getEntryAt(int, int);
 	node getNodeAt(int, int);
 	bool getWaitingForPlayer() { return waitingForPlayer; }
@@ -27,9 +29,12 @@ public:
 	void setIsThinking(bool thinking) { isThinking = thinking; }
 	char getPlayer() { return player; }
 	void setPlayer(char p) { player = p; }
+	char getWinner() { return winner; }
+	void setWinner(char w) { winner; }
 private:
 	bool waitingForPlayer;
 	bool isThinking;
+	char winner;
 	char player;
 	int size;
 	int elements;

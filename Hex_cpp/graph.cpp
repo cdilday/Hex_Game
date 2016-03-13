@@ -18,6 +18,7 @@ graph::graph(){
 	waitingForPlayer = true;
 	isThinking = false;
 	player = '0';
+	winner = '0';
 }//end graph constructor, previously make_graph
 
 //checks if the given node has values in its surrounding nodes or is on an edge
@@ -351,6 +352,7 @@ bool graph::checkVictory(char player)
 					{
 						if (recursivePathW(processed, start, goal))
 						{
+							winner = 'W';
 							return true;
 						}
 					}//end if for goal == W
@@ -373,6 +375,7 @@ bool graph::checkVictory(char player)
 					//recusively traverse 'B' path to if if it won
 					if (goal.getEntry() == 'B' && (recursivePathB(processed, start, goal)))
 					{
+						winner = 'B';
 						return true;
 					}//end if for goal == B
 				}//end for for goal nodes
@@ -522,6 +525,26 @@ bool graph::aIRecursivePathB(std::vector<std::vector<bool> > &processed, node st
 		}
 	}
 	return false; //secondary base case when it hits a dead-end node
+}
+
+//resets all values in the board as if it's brand new
+void graph::resetBoard() {
+	elements = 0;
+	hexBoard.resize(11);
+	for (int r = 0; r < 11; r++)
+	{
+		for (int c = 0; c < 11; c++)
+		{
+			hexBoard[r][c].setEntry('-');
+			for (int i = 0; i < 6; i++) {
+				hexBoard[r][c].setConnection(i, NULL);
+			}
+		}
+	}//end for loop that creates the nodes within the board
+	waitingForPlayer = true;
+	isThinking = false;
+	player = '0';
+	winner = '0';
 }
 
 //returns char value at given location in the graph

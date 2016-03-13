@@ -144,6 +144,39 @@ void drawBoard(sf::RenderWindow* window, graph* board) {
 			}
 		}
 	}
+
+	//now for text that displays the general state of the game
+	sf::Text loadText;
+	loadText.setFont(font);
+	loadText.setColor(sf::Color::White);
+	loadText.setCharacterSize(24);
+	loadText.setPosition(25, 500);
+	//now for states
+	if (board->getWinner() != '0') {
+		if (board->getWinner() == 'W') {
+			loadText.setString("White has made a path from left to right and won!");
+			window->draw(loadText);
+		}
+		else {
+			loadText.setString("Blacj has made a path from top to bottom and won!");
+			window->draw(loadText);
+		}
+	}
+	else if (board->getIsThinking()) {
+		string loadString = "Ai is thinking";
+		time_t currTimer;
+		int dotNum = time(&currTimer)% 4;
+		while(dotNum >= 0){
+			loadString += '.';
+			dotNum--;
+		}
+		loadText.setString(loadString);
+		window->draw(loadText);
+	}
+	else if (board->getWaitingForPlayer()) {
+		loadText.setString("Click the space you want to move");
+		window->draw(loadText);
+	}
 }
 
 void handleRendering(sf::RenderWindow* window, graph* board) {
