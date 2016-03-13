@@ -9,6 +9,10 @@
 
 using namespace std;
 
+float distance(int x1, int y1, int x2, int y2) {
+	return sqrt(((x2 - x1)*(x2 - x1)) + ((y2 - y1)*(y2 - y1)));
+}
+
 void handleEvents(sf::RenderWindow* window, graph* board) {
 	sf::Event event; 
 	int x, y, tempx, tempy;
@@ -19,26 +23,35 @@ void handleEvents(sf::RenderWindow* window, graph* board) {
 			return;
 		case sf::Event::MouseButtonPressed:
 			//cout << "Mouse pressed at " << event.mouseButton.x << ", " << event.mouseButton.y << endl;
-			tempx = event.mouseButton.x + 17;
-			tempy = event.mouseButton.y - 10;
+			tempx = event.mouseButton.x;
+			tempy = event.mouseButton.y;
 			if (board->getPlayer() == '0') {
 				//check if inbound of white piece
-				if (tempy > 300 && tempy < 400) {
-					cout << "In y bounds" << endl;
-					if (tempx > 200 && tempx < 300)
-						board->setPlayer('W');
-					else if (tempx > 550 && tempx < 650)
-						board->setPlayer('B');
+				if (distance(tempx, tempy, 250, 350) <= 50) {
+					board->setPlayer('W');
+				}
+				else if (distance(tempx, tempy, 600, 350) <= 50) {
+					board->setPlayer('B');
 				}
 			}
 			else {
-				y = (int)((float)(tempy / 33));
-				x = (tempx - 50 - (20 * y)) / 38;
-				cout << "Row " << y - 1 << ", Col " << x << endl;
-				//if in bounds and the board is waiting for player input
-				if (x >= 0 && x < 11 && y - 1 >= 0 && y - 1 < 11 && board->getWaitingForPlayer() && !board->getIsThinking()) {
-					board->aiSetMove(board->getPlayer(), y - 1, x);
-					board->setWaitingForPlayer(false);
+				//check if the reset button has been pressed
+				if (distance(tempx, tempy, 575, 475) <= 25) {
+					board->resetBoard();
+					cout << "Reseting game" << endl;
+				}
+				else {
+					//board clicking
+					tempx += 17;
+					tempy -= 10;
+					y = (int)((float)(tempy / 33));
+					x = (tempx - 50 - (20 * y)) / 38;
+					cout << "Row " << y - 1 << ", Col " << x << endl;
+					//if in bounds and the board is waiting for player input
+					if (x >= 0 && x < 11 && y - 1 >= 0 && y - 1 < 11 && board->getWaitingForPlayer() && !board->getIsThinking()) {
+						board->aiSetMove(board->getPlayer(), y - 1, x);
+						board->setWaitingForPlayer(false);
+					}
 				}
 			}
 			break;
@@ -66,6 +79,16 @@ void drawPlayerSelect(sf::RenderWindow* window, graph* board) {
 	instructText.setOrigin(instructTextRect.left + instructTextRect.width / 2.0f, instructTextRect.top + instructTextRect.height / 2.0f);
 	instructText.setPosition(400, 22);
 	window->draw(instructText);
+
+	sf::Text instructText2;
+	instructText2.setFont(font);
+	instructText2.setString("White tries to build a path from West to East\n      Black tries to build North to South");
+	instructText2.setCharacterSize(30);
+	instructText2.setColor(sf::Color::White);
+	sf::FloatRect instructTextRect2 = instructText2.getLocalBounds();
+	instructText2.setOrigin(instructTextRect2.left + instructTextRect2.width / 2.0f, instructTextRect2.top + instructTextRect2.height / 2.0f);
+	instructText2.setPosition(400, 550);
+	window->draw(instructText2);
 
 	//draw pieces that select the color
 	sf::CircleShape whitePiece(50);
@@ -144,6 +167,13 @@ void drawBoard(sf::RenderWindow* window, graph* board) {
 			}
 		}
 	}
+	// reset Button
+	sf::CircleShape resetButton(25);
+	resetButton.setFillColor(sf::Color::Red);
+	resetButton.setOutlineColor(sf::Color::White);
+	resetButton.setOutlineThickness(2);
+	resetButton.setPosition(550, 450);
+	window->draw(resetButton);
 
 	//now for text that displays the general state of the game
 	sf::Text loadText;
