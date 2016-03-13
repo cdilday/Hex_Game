@@ -265,7 +265,6 @@ void playAIGame(graph* board){
 		}
 		cout << *board;
 		int r, c;
-
 		for (int turn = 1; turn <= 121; turn++)
 		{
 			if (player == 'W') {
@@ -320,6 +319,9 @@ void playAIGame(graph* board){
 				}
 			}//end if player is B move
 		}//end main for loop
+		board->setIsThinking(false);
+		board->setWaitingForPlayer(true);
+		while (board->getWinner() != '0') { Sleep(50); }
 	}//end core loop lopp
 }//end playAIGame
 
